@@ -10,3 +10,7 @@ var Dva = 2
 
 /* dvolinijski komentar 
  kraj */
+
+let b = 10
+var a = 5
+a = b
