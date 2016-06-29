@@ -7,3 +7,6 @@ let Jedan = 1
 var Dva = 2
 
 // jednolinijski komentar, provjera commit-a
+
+/* dvolinijski komentar 
+ kraj */
