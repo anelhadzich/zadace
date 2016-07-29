@@ -87,7 +87,6 @@ class Person: MessageHandlerDelegate {
         print("Hey, I have got message from \(message.sender.name) \(message.text)")
     }
 }
-
 var telephone = Telephone(model: "Nokia3310")
 var osoba = Person(name: "Anel", lastName: "Hadzic", yearOfBirth: 1988, location: Location())
 osoba.addTelephone(telephone)
