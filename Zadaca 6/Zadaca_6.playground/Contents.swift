@@ -101,7 +101,6 @@ let message3 = Message(sender: contact3, text: "Message 3")
 
 telephone.addNewMessage(message1)
 telephone.addNewMessage(message2)
-
 osoba.removeTelephone()
 telephone.addNewMessage(message3)
 
