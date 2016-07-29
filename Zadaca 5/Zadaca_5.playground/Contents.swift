@@ -1,5 +1,3 @@
-/* 1) Struktura Location sa poljima latitude i longitude gdje sam ja rucno odredio vrijednosti latitude i longitude jer mi arc4random ne radi, nemam pojma zasto
- */
 import Foundation
 class Parent: Person {
     var children: [Person]
@@ -14,24 +12,15 @@ class Parent: Person {
         self.init(children: [])    }
     override func introduction() -> String {
         if children.isEmpty {
-            return "nemaaa"
+            return "No children"
+            // print (children)
         }
         else {
             return super.introduction() + "I am parent of \(children.count)"
         }
+        
     }
 }
-//pokusaj inicijalizacije
-/*
-class anel: Person {
-    var osoba: String?
-    init(name: String, lastName: String, yearOfBirth: Int, location: Location, osoba: String?){
-      
-    super.init(name: name, lastName: name, yearOfBirth: yearOfBirth, location: location)
-      self.osoba = osoba
- }
-}
-*/
 
 struct Location {
     var latitude: Double
@@ -53,6 +42,9 @@ class Person {
         get {
             return 2016 - yearOfBirth
         }
+        set {
+            yearOfBirth = 2016 - age
+    }
     }
     init(name: String, lastName: String, yearOfBirth: Int, location: Location){
         self.name = name
@@ -70,14 +62,11 @@ class Person {
     
     
     func introduction() -> String{
-        return "Hi, my name is \(name)\(lastName)"
+        return "Hi, my name is \(name) \(lastName)"
     }
-            }
+}
 
-let mirko = Person(name: "Mirko", lastName: "Babic", yearOfBirth: 1987, location: Location())
-let nedim = Person(name: "Nedim", lastName: "Sabic", yearOfBirth: 1982, location: Location())
-mirko.introduction()
-nedim.introduction()
+
 
 
 //dio 2
@@ -104,25 +93,51 @@ class Student: Person {
             
         }
     }
-    
+// e ovaj dio iz nekog razloga ne vraca nista
     init (name: String, lastName: String, yearOfBirth: Int, location: Location, attendingCourses: [Course], grades: [Int]) {
         self.attendingCourses = attendingCourses
         self.grades = grades
         super.init(name: name, lastName: lastName, yearOfBirth: yearOfBirth, location: location)
-       
+        
         func introduction() -> String {
             return super.introduction() + "I am a student at \(faculty). My favorite course is " + attendingCourses.first!.aboutTheCourse()
         }
     }
-            override func introduction() -> String {
-                if father?.savings == nil && mother?.savings == nil {
-                    return super.introduction() + "I am a student at \(faculty). My favorite course is " + attendingCourses.first!.aboutTheCourse() + ". We are broke"
-                } }
+    override func introduction() -> String {
+        if father?.savings != nil {
+            return super.introduction() + ". Father has $\(father!.savings)"
+        }
+        if mother?.savings != nil {
+            return super.introduction() + ". Mother has $\(mother!.savings)"
+        }
+        else {
+            return super.introduction() + ". We are broke"
+        }
+        
+    }
+    
 }
-var student = Student(name: "Anel", lastName: "Hadzic", yearOfBirth: 1988, location: Location(), attendingCourses: [Course()], grades: [5, 6, 6], grades: [8, 8, 7])
-
 extension Int {
     mutating func ageInDays() -> Int {
         return self * 365
     }
 }
+
+let student = Person(name: "Anel", lastName: "Hadzic", yearOfBirth: 1988, location: Location())
+let brother = Person(name: "Ahmed", lastName: "Hadzic", yearOfBirth: 1993, location: Location())
+
+let mother = Parent(name: "Murisa", lastName: "Hadzic ", yearOfBirth: 1963, location: Location(), children: [student, brother], savings: Double(arc4random()%10000))
+
+print(mother.introduction() + " children.")
+print(student.introduction() + " and my mother is \(mother.name + " " + mother.lastName).")
+
+    print(student.age.ageInDays())
+
+let mirko = Person(name: "Mirko", lastName: "Babic", yearOfBirth: 1987, location: Location())
+let nedim = Person(name: "Nedim", lastName: "Sabic", yearOfBirth: 1982, location: Location())
+mirko.introduction()
+nedim.introduction()
+student.introduction()
+
+
+

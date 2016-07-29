@@ -20,9 +20,10 @@ class Message {
         case Received
         case Read
     }
-    init(sender: Contact, text: String) {
-        self.sender = sender
-        self.text  = text
+        init(sender: Contact, text: String) {
+            self.sender = sender
+            self.text = text
+        
     }
     func changeStatusToRead() {
         status = .Read
@@ -41,8 +42,8 @@ class Telephone {
     }
     func addNewMessage(message: Message){
         messages = [message]
-        delegate?.didReceiveMessage(message: message)
-    }
+        delegate?.didReceiveMessage(message)
+}
 }
 
 class Person: MessageHandlerDelegate {
@@ -71,11 +72,11 @@ class Person: MessageHandlerDelegate {
     }
     
     
-    func introduction() -> String{
+        func introduction() -> String{
         return "Hi, my name is \(name)"
     }
     func didReceiveMessage(message: Message) {
-        readMessage(message: message)
+        readMessage(message)
     }
     func removeTelephone() {
         telephone = nil
@@ -89,7 +90,7 @@ class Person: MessageHandlerDelegate {
 
 var telephone = Telephone(model: "Nokia3310")
 var osoba = Person(name: "Anel", lastName: "Hadzic", yearOfBirth: 1988, location: Location())
-osoba.addTelephone(telephone: telephone)
+osoba.addTelephone(telephone)
 let contact1 = Contact(name: "kontakt1", phoneNumber: 555444)
 let contact2 = Contact(name: "kontakt2", phoneNumber: 444333)
 let contact3 = Contact(name: "kontakt3", phoneNumber: 333222)
@@ -98,11 +99,11 @@ let message1 = Message(sender: contact1, text: "Message 1")
 let message2 = Message(sender: contact2, text: "Message 2")
 let message3 = Message(sender: contact3, text: "Message 3")
 
-telephone.addNewMessage(message: message1)
-telephone.addNewMessage(message: message2)
+telephone.addNewMessage(message1)
+telephone.addNewMessage(message2)
 
 osoba.removeTelephone()
-telephone.addNewMessage(message: message3)
+telephone.addNewMessage(message3)
 
 
 
