@@ -4,6 +4,19 @@ func delayedPrint(a: String)  {
     sleep(2)
     print(a)
 }
+enum DrivingLicenceType {
+    case A, B, C, D
+}
+protocol DrivingLicence {
+    var set: Set<DrivingLicenceType> { get set }
+}
+protocol CarMonitoringDelegate {
+    func engineBroke()
+    func lowOnFuel()
+    func outOfFuel()
+}
+
+
 class Person {
     var firstName: String
     var lastName: String
@@ -14,20 +27,18 @@ class Person {
     self.age = age
     }
 }
-enum DrivingLicenceType {
-    case A, B, C, D
+class Mechanic: Person {
+    var authorizedServicerForLicenceTypes: Set<DrivingLicenceType>
+    init(firstName: String, lastName: String, age: Int, authorizedServicerForLicenceTypes: Set<DrivingLicenceType>){
+        self.authorizedServicerForLicenceTypes = authorizedServicerForLicenceTypes
+        super.init(firstName: firstName, lastName: lastName, age: age)
+    }
+    func fixCar(car: Car){
+        delayedPrint("\(firstName) is fixing a car")
+        car.broken = false
+        delayedPrint("Car fixed")
+    }
 }
-
-
-protocol DrivingLicence {
-    var set: Set<DrivingLicenceType> { get set }
-}
-protocol CarMonitoringDelegate {
-    func engineBroke()
-    func lowOnFuel()
-    func outOfFuel()
-}
-
 class Driver: Person, DrivingLicence {
     var car: Car?
     var mechanic: Mechanic?
@@ -48,19 +59,44 @@ class Driver: Person, DrivingLicence {
     func driveCar(){
         car?.drive()
     }
-    }
-class Mechanic: Person {
-    var authorizedServicerForLicenceTypes: Set<DrivingLicenceType>
-    init(firstName: String, lastName: String, age: Int, authorizedServicerForLicenceTypes: Set<DrivingLicenceType>){
-    self.authorizedServicerForLicenceTypes = authorizedServicerForLicenceTypes
-    super.init(firstName: firstName, lastName: lastName, age: age)
 }
-    func fixCar(car: Car){
-        delayedPrint("\(firstName) is fixing a car")
-        car.broken = false
-        delayedPrint("Car fixed")
+extension Driver: CarMonitoringDelegate {
+    func engineBroke() {
+        delayedPrint("Calling a mechanic")
+        callMechanic(mechanic!, toFixACar: car!)
     }
-}
+    func lowOnFuel() {
+        print("ovdje zajebava")
+        var newValue = Int(arc4random() % 100)
+         if (newValue > 33) {
+         delayedPrint("I will add some gas later")
+         print("lowOnFUel")
+         guard newValue <= car!.fuelTank
+         else {
+         delayedPrint("I will add some gas now")
+         newValue = car!.fuelTank - car!.fuelLevel
+         newValue
+         print("lowOnFUel - print")
+         
+         return
+         delayedPrint("Adedd fuel. Curent level is \(car!.fuelLevel)")
+        
+            }
+        }
+        
+    }
+    func outOfFuel() {
+        let newValue = Int(arc4random()) % 100
+        delayedPrint("I will add some gas now")
+        if car!.fuelLevel < 20 {
+            car!.fuelLevel += newValue
+        }
+        car!.fuelLevel
+        delayedPrint("Added \(car!.fuelLevel)l of gas")
+        
+    }}
+
+
 class Car {
     var name: String
     var model: String
@@ -78,19 +114,19 @@ class Car {
         }
         set(newValue) {
             if  newValue > fuelTank {
-            fuel = fuelTank
+                fuel = fuelTank
             } else {
-            fuel = newValue
-        }
+                fuel = newValue
+            }
         }
     }
     init(name: String, model: String, licenceType: DrivingLicenceType, fuelTank: Int, fuelLevel: Int){
-    self.name = name
-    self.model = model
-    self.licenceType = licenceType
-    self.fuelTank = fuelTank
-    self.fuelLevel = fuelLevel
-}
+        self.name = name
+        self.model = model
+        self.licenceType = licenceType
+        self.fuelTank = fuelTank
+        self.fuelLevel = fuelLevel
+    }
     func stop() {
         engineOn = false
     }
@@ -107,7 +143,7 @@ class Car {
             if fuelLevel == 10 {
                 delayedPrint("Fuel low")
                 delegate?.lowOnFuel()
-                print("a")
+                print("zapelo odje")
             }
             
             guard (fuelLevel < 0) else {
@@ -119,40 +155,20 @@ class Car {
             
             fuelLevel -= 1
             crossedKilometers += 10
-            if (arc4random() % 100) + 1 == 100 {
+            if (arc4random() % 10) + 1 == 10 {
                 broken = true
             }
         }
     }
-        }
-extension Driver: CarMonitoringDelegate {
-    func engineBroke() {
-        delayedPrint("Calling a mechanic")
-    }
-    func lowOnFuel() {
-        var newValue = Int(arc4random() % 100)
-        if (newValue <= 33) {
-            delayedPrint("I will add some gas later")
-            guard newValue <= car!.fuelTank
-                else {
-                    delayedPrint("I will add some gas now")
-                    newValue = car!.fuelTank - car!.fuelLevel
-        return
-            
-            delayedPrint("Adedd fuel. Curent level is \(car!.fuelLevel)")
-            }}}
-    func outOfFuel() {
-        let newValue = Int(arc4random() % 100)
-        delayedPrint("I will add some gas now")
-        car!.fuelLevel += newValue
-        print("out of fuel")
-    }}
+}
+
 
 var driver = Driver(set: [DrivingLicenceType.C], firstName: "Mujo", lastName: "Mujic", age: 30)
-var car = Car(name: "Lada", model: "Niva", licenceType: DrivingLicenceType.B, fuelTank: 80, fuelLevel: 60)
+var car = Car(name: "Lada", model: "Niva", licenceType: DrivingLicenceType.B, fuelTank: 80, fuelLevel: 50)
 var mechanic = Mechanic(firstName: "Kemo", lastName: "Zahirovic", age: 40,authorizedServicerForLicenceTypes: [DrivingLicenceType.B, DrivingLicenceType.C])
+
 driver.car = car
-car.delegate? = driver
+car.delegate = driver
 driver.mechanic = mechanic
 for value in 1...10 {
     driver.driveCar()
